@@ -78,7 +78,7 @@
       theme: "vintage",
     }));
 
-    console.log(certificates);
+    // console.log(certificates);
     const planSelected = selectedProduct.id;
 
     try {
@@ -510,36 +510,35 @@
   .success-card {
     padding: 40px;
     text-align: center;
-    border: 2px solid #dcfce7;
+    border: 2px solid #e6fffa;
     background: #ffffff;
-    border-radius: 35px;
+    border-radius: 30px;
+  }
+  .icon-header {
+    margin-bottom: 20px;
   }
   .success-card h2 {
-    color: #166534;
-    font-size: 1.8rem;
-    font-weight: 800;
+    color: #1a202c;
+    font-size: 2rem;
     margin-bottom: 10px;
   }
   .main-msg {
-    color: #4a342e;
-    font-weight: 500;
+    color: #4a5568;
     margin-bottom: 30px;
   }
-
   .delivery-steps {
     display: grid;
-    gap: 15px;
+    gap: 20px;
     text-align: left;
-    margin-bottom: 30px;
+    margin-bottom: 40px;
   }
   .delivery-item {
     display: flex;
     gap: 15px;
-    align-items: center;
-    padding: 20px;
-    background: #fffdf5;
-    border-radius: 20px;
-    border: 1px solid #ffecb3;
+    align-items: flex-start;
+    padding: 15px;
+    background: #f8fafc;
+    border-radius: 15px;
   }
   .step-text strong {
     display: block;
@@ -551,12 +550,11 @@
     color: #8d6e63;
     line-height: 1.4;
   }
-
   .guarantee-box {
     background: #fef2f2;
     border: 1px solid #fee2e2;
     padding: 20px;
-    border-radius: 20px;
+    border-radius: 15px;
     text-align: left;
   }
   .guarantee-header {
@@ -566,7 +564,7 @@
     color: #dc2626;
     font-weight: 700;
     margin-bottom: 8px;
-    font-size: 0.85rem;
+    font-size: 0.9rem;
     text-transform: uppercase;
   }
   .guarantee-box p {
@@ -574,16 +572,22 @@
     color: #991b1b;
     margin: 0;
     line-height: 1.5;
-    font-weight: 500;
   }
-
+  .support-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    color: #a0aec0;
+    font-size: 0.75rem;
+    justify-content: center;
+  }
   .order-summary {
     position: sticky;
     top: 20px;
     padding: 30px;
     background: white;
-    border-radius: 30px;
-    border: 1px solid #ffecb3;
+    border-radius: 20px;
   }
   .secure-checkout {
     display: flex;
@@ -594,18 +598,16 @@
     color: #166534;
     margin-bottom: 20px;
     background: #f0fff4;
-    padding: 10px;
-    border-radius: 12px;
-    font-weight: 700;
+    padding: 6px;
+    border-radius: 6px;
+    font-weight: 600;
   }
-  .summary-details {
-    margin-bottom: 20px;
-  }
-  .item {
+  .summary-total {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 10px;
-    font-size: 0.95rem;
+    align-items: center;
+    font-weight: 700;
+    margin-top: 20px;
   }
   .total-price {
     font-size: 2rem;
