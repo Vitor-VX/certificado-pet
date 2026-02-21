@@ -225,9 +225,12 @@
               <div class="icon-header">
                 <CheckCircle size={64} color="#22c55e" strokeWidth={1.5} />
               </div>
+
               <h2>Registro Confirmado!</h2>
+
               <p class="main-msg">
-                Obrigado por registrar seu melhor amigo conosco.
+                O registro do seu pet foi realizado com sucesso. Já iniciamos o
+                processo de envio da sua certidão personalizada.
               </p>
 
               <div class="delivery-steps">
@@ -236,14 +239,15 @@
                     <MessageSquare size={24} color="#25D366" />
                   </div>
                   <div class="step-text">
-                    <strong>Confira seu WhatsApp</strong>
-                    <span
-                      >Enviamos a certidão agora mesmo para o número <b
-                        >{customerData.whatsapp}</b
-                      >.</span
-                    >
+                    <strong>Entrega principal via WhatsApp</strong>
+                    <span>
+                      Sua certidão foi enviada para o número
+                      <b>{customerData.whatsapp}</b>. Verifique suas conversas e
+                      também a pasta de mensagens arquivadas.
+                    </span>
                   </div>
                 </div>
+
                 <div class="delivery-item">
                   <div class="step-icon">
                     <Mail size={24} color="#ff9f1c" />
@@ -251,10 +255,12 @@
                   <div class="step-text">
                     <strong>Entrega alternativa por e-mail</strong>
                     <span>
-                      Caso haja qualquer dificuldade na entrega via WhatsApp,
-                      entraremos em contato e enviaremos seu envelope para o
-                      e-mail
-                      <b>{customerData.email}</b>.
+                      Caso não seja possível realizar a entrega via WhatsApp,
+                      enviaremos automaticamente para o e-mail
+                      <b>{customerData.email}</b>. É importante verificar também
+                      sua
+                      <strong>caixa de spam</strong> e garantir que seu e-mail tenha
+                      espaço disponível.
                     </span>
                   </div>
                 </div>
@@ -263,21 +269,34 @@
               <div class="guarantee-box">
                 <div class="guarantee-header">
                   <ShieldCheck size={20} />
-                  <span>Garantia de Entrega</span>
+                  <span>Garantia Total de Entrega ou Reembolso</span>
                 </div>
+
                 <p>
-                  Fique tranquilo! Caso ocorra qualquer imprevisto técnico no
-                  envio, você conta com <strong
-                    >reembolso integral automático</strong
-                  >.
+                  Trabalhamos para garantir que você receba sua certidão com
+                  segurança. Caso não seja possível realizar a entrega nem pelo
+                  WhatsApp nem pelo e-mail, seja por motivos como <strong
+                    >caixa de entrada cheia</strong
+                  >,
+                  <strong>indisponibilidade do provedor</strong> ou outros
+                  problemas técnicos, realizaremos o
+                  <strong>reembolso automático e integral em até 1 dia</strong>.
+                </p>
+
+                <p>
+                  Se houver qualquer dificuldade no recebimento do reembolso ou
+                  se precisar de suporte, basta entrar em contato com nosso <strong
+                    >suporte oficial no Instagram</strong
+                  >, e nossa equipe resolverá rapidamente para você.
                 </p>
               </div>
 
               <div class="support-info">
                 <AlertCircle size={16} />
-                <span
-                  >Precisa de ajuda? Entre em contato com nosso suporte.</span
-                >
+                <span>
+                  Nosso suporte está disponível para garantir que você tenha uma
+                  experiência segura e sem riscos.
+                </span>
               </div>
             </div>
           </div>
@@ -605,7 +624,10 @@
       flex-direction: column;
     }
     .copy-btn {
-      padding: 16px;
+      padding: 15px;
+    }
+    .success-card {
+      padding: 20px;
     }
   }
 </style>
