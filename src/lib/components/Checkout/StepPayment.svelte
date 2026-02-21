@@ -70,41 +70,43 @@
 
     const certificates = people.map((el) => ({
       petName: el.petName,
-      breed: el.breed,
+      race: el.race,
       startDate: el.startDate,
       tutorName: el.tutorName,
       city: el.cityName,
-      state: el.stateName,
       photo: el.photo,
-      theme: el.selectedTheme,
+      theme: "vintage",
     }));
 
+    console.log(certificates);
+    const planSelected = selectedProduct.id;
+
     try {
-      // const request = await fetch(
-      //   "https://vxsoftware.space/api/v1/offers/certificate/orders/create",
-      //   {
-      //     method: "POST",
-      //     headers: { "Content-Type": "application/json" },
-      //     body: JSON.stringify({
-      //       product: {
-      //         plan: "single",
-      //         extras: upsell,
-      //         certificates,
-      //       },
-      //       name: customerData.name,
-      //       whatsapp: customerData.whatsapp,
-      //       email: customerData.email,
-      //     }),
-      //   },
-      // );
+      const request = await fetch(
+        "https://vxsoftware.space/api/v1/offers/certificate-pet/orders/create",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            product: {
+              plan: planSelected,
+              extras: upsell,
+              certificates,
+            },
+            name: customerData.name,
+            whatsapp: customerData.whatsapp,
+            email: customerData.email,
+          }),
+        },
+      );
 
-      // const response = await request.json();
-      // const { payment, token } = response.data;
-      // const { qrCode, qrCodeBase64 } = payment;
+      const response = await request.json();
+      const { payment, token } = response.data;
+      const { qrCode, qrCodeBase64 } = payment;
 
-      setPixData("123", `data:image/png;base64,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`);
+      setPixData(qrCode, `data:imagepng;base64,${qrCodeBase64}`);
       setPaymentStatus("waiting");
-      // localStorage.setItem("order-payment", token);
+      localStorage.setItem("order-payment", token);
     } catch (err) {
       console.error("Erro ao gerar pagamento:", err);
     }
@@ -115,7 +117,7 @@
     if (!token) return;
 
     const res = await fetch(
-      "https://vxsoftware.space/api/v1/offers/certificate/orders/current",
+      "https://vxsoftware.space/api/v1/offers/certificate-pet/orders/current",
       {
         headers: { Authorization: `Bearer ${token}` },
       },
@@ -247,12 +249,13 @@
                     <Mail size={24} color="#ff9f1c" />
                   </div>
                   <div class="step-text">
-                    <strong>Cópia por E-mail</strong>
-                    <span
-                      >Também enviamos uma cópia de segurança para <b
-                        >{customerData.email}</b
-                      >.</span
-                    >
+                    <strong>Entrega alternativa por e-mail</strong>
+                    <span>
+                      Caso haja qualquer dificuldade na entrega via WhatsApp,
+                      entraremos em contato e enviaremos seu envelope para o
+                      e-mail
+                      <b>{customerData.email}</b>.
+                    </span>
                   </div>
                 </div>
               </div>
@@ -335,6 +338,15 @@
   .loading-state {
     text-align: center;
     padding: 50px 0;
+  }
+  .support-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 25px;
+    color: #a0aec0;
+    font-size: 0.75rem;
+    justify-content: center;
   }
   .paw-loader {
     animation: bounce 1s infinite alternate;

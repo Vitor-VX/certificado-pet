@@ -96,8 +96,6 @@
   }
 
   function handleSubmit() {
-    if (customerData.email || !customerData.email) return;
-
     if (!customerData.email || !customerData.name || !customerData.whatsapp) {
       alert("Por favor, preencha todos os campos obrigatórios.");
       return;
@@ -106,13 +104,11 @@
     const isMissingData = people.some((p) => {
       return (
         !p.petName?.trim() ||
-        !p.breed?.trim() ||
+        !p.race?.trim() ||
         !p.tutorName?.trim() ||
         !p.cityName?.trim() ||
         !p.stateName?.trim() ||
-        !p.startDate?.trim() ||
-        !p.selectedTheme ||
-        (isWithPhoto && !p.photo)
+        !p.startDate?.trim()
       );
     });
 
@@ -161,9 +157,11 @@
     <div class="form-flow">
       {#each people as person, index}
         <section class="card-section">
+          <div class="pet-counter-badge">Pet {index + 1}</div>
+
           <div class="section-title">
             <PawPrint size={20} />
-            <span>Informações do Pet</span>
+            <span>Dados do Registro</span>
           </div>
 
           <div class="input-grid">
@@ -182,9 +180,9 @@
               <input
                 type="text"
                 placeholder="Ex: SRD, Poodle..."
-                value={person.breed || ""}
+                value={person.race || ""}
                 on:input={(e) =>
-                  handlePersonUpdate(index, "breed", e.currentTarget.value)}
+                  handlePersonUpdate(index, "race", e.currentTarget.value)}
               />
             </div>
           </div>
@@ -266,7 +264,7 @@
             </div>
           </div> -->
 
-          {#if isWithPhoto}
+          {#if !isWithPhoto}
             <div class="form-group">
               <label>Foto do Pet</label>
               <div class="upload-container">
@@ -412,6 +410,7 @@
   }
 
   .card-section {
+    position: relative;
     background: white;
     border-radius: 24px;
     padding: 30px;
@@ -429,6 +428,7 @@
     font-size: 1.1rem;
     text-transform: uppercase;
     letter-spacing: 1px;
+    margin-top: 10px;
   }
 
   .input-grid {
@@ -447,7 +447,7 @@
     margin-bottom: 20px;
   }
   .form-group label {
-    display: block;
+    display: flex;
     font-size: 0.9rem;
     font-weight: 700;
     margin-bottom: 8px;
@@ -471,6 +471,19 @@
     border-color: #ff9f1c;
     background: white;
     box-shadow: 0 0 0 4px rgba(255, 159, 28, 0.1);
+  }
+
+  .pet-counter-badge {
+    position: absolute;
+    top: -12px;
+    right: 30px;
+    background: #ff9f1c;
+    color: white;
+    padding: 4px 15px;
+    border-radius: 50px;
+    font-size: 0.85rem;
+    font-weight: 700;
+    box-shadow: 0 4px 10px rgba(255, 159, 28, 0.3);
   }
 
   /* THEME SELECTOR */
@@ -527,7 +540,6 @@
     color: #4a342e;
   }
 
-  /* UPLOAD */
   .upload-container {
     width: 120px;
   }

@@ -18,13 +18,12 @@ export interface Extra {
 }
 
 export interface PersonData {
-  name1: string;
-  name2: string;
-  name: string;
+  petName: string;
+  race: string;
+  tutorName: string;
   startDate: string;
   cityName: string;
   stateName: string;
-  city: string;
   photo?: string;
   selectedTheme: string;
 }
@@ -75,14 +74,14 @@ export const setCurrentStep = (step: number) => {
 export const selectProduct = (product: Product) => {
   checkoutStore.update(state => {
     const people = Array.from({ length: product.quantity }, () => ({
-      name1: '',
-      name2: '',
-      name: '',
-      startDate: '',
-      cityName: '',
-      stateName: '',
-      city: '',
-      selectedTheme: ''
+      petName: "",
+      race: "",
+      tutorName: "",
+      startDate: "",
+      cityName: "",
+      stateName: "",
+      photo: "",
+      selectedTheme: "",
     }));
 
     const extrasTotal = state.selectedExtras.reduce((sum, extra) => sum + (extra.selected ? extra.price : 0), 0);
@@ -163,12 +162,28 @@ export const resetCheckout = () => {
 
 export const products: Product[] = [
   {
-    id: '1',
+    id: 'single',
     name: '1 Pet',
-    description: '1 certidão do seu pet personalizada',
+    description: 'Certidão personalizada para 1 pet, desenvolvida com cuidado e exclusividade.',
     price: 12.90,
     oldPrice: 29.90,
     quantity: 1
+  },
+  {
+    id: 'double',
+    name: '2 Pets',
+    description: 'Certidões personalizadas para 2 pets, com condições especiais e melhor custo-benefício.',
+    price: 22.90,
+    oldPrice: 59.90,
+    quantity: 2
+  },
+  {
+    id: 'triple',
+    name: '3 Pets',
+    description: 'Certidões personalizadas para 3 pets, ideal para quem deseja registrar todos com economia.',
+    price: 29.90,
+    oldPrice: 89.90,
+    quantity: 3
   }
 ];
 
