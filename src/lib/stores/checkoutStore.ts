@@ -58,7 +58,6 @@ const initialState: CheckoutState = {
   },
   totalAmount: 0,
   paymentStatus: 'pending',
-  // paymentStatus: 'paid',
   pixCode: '',
   pixQrCode: "https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=Example"
 };

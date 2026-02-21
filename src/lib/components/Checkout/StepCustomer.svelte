@@ -108,7 +108,8 @@
         !p.tutorName?.trim() ||
         !p.cityName?.trim() ||
         !p.stateName?.trim() ||
-        !p.startDate?.trim()
+        !p.startDate?.trim() ||
+        !p.photo?.trim()
       );
     });
 

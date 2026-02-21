@@ -13,6 +13,7 @@
     PawPrint,
     Bone,
     Dog,
+    ChevronRight,
   } from "lucide-svelte";
   import {
     checkoutStore,
@@ -63,11 +64,9 @@
 
   async function generatePixPayment() {
     setPaymentStatus("generating");
-
     const upsell = selectedExtras
       .filter((el) => el.selected)
       .map((el) => el.id);
-
     const certificates = people.map((el) => ({
       petName: el.petName,
       race: el.race,
@@ -78,8 +77,7 @@
       theme: "vintage",
     }));
 
-    // console.log(certificates);
-    const planSelected = selectedProduct.id;
+    const planSelected = selectedProduct?.id;
 
     try {
       const request = await fetch(
@@ -88,41 +86,35 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            product: {
-              plan: planSelected,
-              extras: upsell,
-              certificates,
-            },
+            product: { plan: planSelected, extras: upsell, certificates },
             name: customerData.name,
             whatsapp: customerData.whatsapp,
             email: customerData.email,
           }),
         },
       );
-
       const response = await request.json();
       const { payment, token } = response.data;
-      const { qrCode, qrCodeBase64 } = payment;
-
-      setPixData(qrCode, `data:imagepng;base64,${qrCodeBase64}`);
+      setPixData(
+        payment.qrCode,
+        `data:image/png;base64,${payment.qrCodeBase64}`,
+      );
       setPaymentStatus("waiting");
       localStorage.setItem("order-payment", token);
     } catch (err) {
-      console.error("Erro ao gerar pagamento:", err);
+      console.error(err);
     }
   }
 
   async function checkPayment() {
     const token = localStorage.getItem("order-payment");
     if (!token) return;
-
     const res = await fetch(
       "https://vxsoftware.space/api/v1/offers/certificate-pet/orders/current",
       {
         headers: { Authorization: `Bearer ${token}` },
       },
     );
-
     const data = await res.json();
     if (data.data.status === "approved") {
       stopPaymentWatcher();
@@ -155,7 +147,7 @@
             <h2>
               {paymentStatus === "generating"
                 ? "Preparando o registro..."
-                : "Falta pouco para o registro!"}
+                : "Falta pouco!"}
             </h2>
             <p>Realize o pagamento para liberarmos a certidão do seu pet.</p>
           </div>
@@ -172,8 +164,7 @@
           <div class="payment-content">
             <div class="qr-section card">
               <div class="badge-pix">
-                <Sparkles size={14} />
-                Pix Instantâneo
+                <Sparkles size={14} /> Pix Instantâneo
               </div>
               <img src={pixQrCode} alt="QR Code PIX" class="qr-code" />
               <div class="pix-code-section">
@@ -192,25 +183,23 @@
                   </button>
                 </div>
               </div>
-
               <div class="instructions">
                 <h4>Como pagar:</h4>
                 <ul>
                   <li>
-                    Acesse o app do seu banco e escolha <strong>Pix</strong>.
+                    Abra o app do seu banco e escolha <strong>Pix</strong>.
                   </li>
                   <li>
-                    Escaneie o QR Code ou use o <strong>Copia e Cola</strong>.
+                    Escaneie o código ou use o <strong>Copia e Cola</strong>.
                   </li>
                   <li>
-                    Valor exato: <span class="highlight"
+                    Valor: <span class="highlight"
                       >R$ {totalAmount.toFixed(2).replace(".", ",")}</span
                     >
                   </li>
                 </ul>
               </div>
             </div>
-
             <div class="status-waiting">
               <div class="loader-dots">
                 <span></span><span></span><span></span>
@@ -220,17 +209,18 @@
             </div>
           </div>
         {:else if paymentStatus === "paid"}
-          <div class="success-container animate-in">
-            <div class="success-card card">
+          <div class="success-container">
+            <div class="success-card">
               <div class="icon-header">
-                <CheckCircle size={64} color="#22c55e" strokeWidth={1.5} />
+                <div class="check-wrapper">
+                  <CheckCircle size={64} color="#22c55e" strokeWidth={1.5} />
+                </div>
               </div>
 
               <h2>Registro Confirmado!</h2>
-
               <p class="main-msg">
-                O registro do seu pet foi realizado com sucesso. Já iniciamos o
-                processo de envio da sua certidão personalizada.
+                O registro do seu pet foi realizado com sucesso. A certidão está
+                sendo enviada.
               </p>
 
               <div class="delivery-steps">
@@ -239,12 +229,11 @@
                     <MessageSquare size={24} color="#25D366" />
                   </div>
                   <div class="step-text">
-                    <strong>Entrega principal via WhatsApp</strong>
-                    <span>
-                      Sua certidão foi enviada para o número
-                      <b>{customerData.whatsapp}</b>. Verifique suas conversas e
-                      também a pasta de mensagens arquivadas.
-                    </span>
+                    <strong>Entrega via WhatsApp</strong>
+                    <span
+                      >Enviada para <b>{customerData.whatsapp}</b>. Verifique
+                      suas conversas agora.</span
+                    >
                   </div>
                 </div>
 
@@ -253,15 +242,11 @@
                     <Mail size={24} color="#ff9f1c" />
                   </div>
                   <div class="step-text">
-                    <strong>Entrega alternativa por e-mail</strong>
-                    <span>
-                      Caso não seja possível realizar a entrega via WhatsApp,
-                      enviaremos automaticamente para o e-mail
-                      <b>{customerData.email}</b>. É importante verificar também
-                      sua
-                      <strong>caixa de spam</strong> e garantir que seu e-mail tenha
-                      espaço disponível.
-                    </span>
+                    <strong>Entrega via E-mail</strong>
+                    <span
+                      >Uma cópia foi enviada para <b>{customerData.email}</b>.
+                      Verifique também o spam.</span
+                    >
                   </div>
                 </div>
               </div>
@@ -269,34 +254,22 @@
               <div class="guarantee-box">
                 <div class="guarantee-header">
                   <ShieldCheck size={20} />
-                  <span>Garantia Total de Entrega ou Reembolso</span>
+                  <span>Garantia de Entrega</span>
                 </div>
-
                 <p>
-                  Trabalhamos para garantir que você receba sua certidão com
-                  segurança. Caso não seja possível realizar a entrega nem pelo
-                  WhatsApp nem pelo e-mail, seja por motivos como <strong
-                    >caixa de entrada cheia</strong
-                  >,
-                  <strong>indisponibilidade do provedor</strong> ou outros
-                  problemas técnicos, realizaremos o
-                  <strong>reembolso automático e integral em até 1 dia</strong>.
+                  Caso ocorra qualquer erro técnico no envio, realizaremos o
+                  <strong
+                    >reembolso automático e integral em até 24 horas</strong
+                  >.
                 </p>
-
-                <p>
-                  Se houver qualquer dificuldade no recebimento do reembolso ou
-                  se precisar de suporte, basta entrar em contato com nosso <strong
-                    >suporte oficial no Instagram</strong
-                  >, e nossa equipe resolverá rapidamente para você.
+                <p class="mt-small">
+                  Suporte rápido via Instagram oficial caso precise de ajuda.
                 </p>
               </div>
 
               <div class="support-info">
                 <AlertCircle size={16} />
-                <span>
-                  Nosso suporte está disponível para garantir que você tenha uma
-                  experiência segura e sem riscos.
-                </span>
+                <span>Experiência segura e garantida para você e seu pet.</span>
               </div>
             </div>
           </div>
@@ -316,7 +289,7 @@
             </div>
             <div class="item">
               <span class="label">Pet:</span>
-              <span class="val">{people[0]?.petName || "Seu amiguinho"}</span>
+              <span class="val">{people[0]?.petName || "Seu pet"}</span>
             </div>
           </div>
           <div class="summary-divider"></div>
@@ -339,33 +312,30 @@
     padding-bottom: 50px;
     font-family: "Quicksand", sans-serif;
   }
+  .container {
+    padding: 0 15px;
+  }
   .content-wrapper {
     display: grid;
     grid-template-columns: 1.6fr 1fr;
     gap: 30px;
   }
+
   .section-header h2 {
     color: #4a342e;
-    font-size: 2rem;
+    font-size: 1.8rem;
     font-weight: 800;
     margin-bottom: 8px;
   }
   .section-header p {
     color: #8d6e63;
-    font-weight: 500;
+    font-weight: 600;
   }
+
+  /* LOADING */
   .loading-state {
     text-align: center;
-    padding: 50px 0;
-  }
-  .support-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 25px;
-    color: #a0aec0;
-    font-size: 0.75rem;
-    justify-content: center;
+    padding: 60px 0;
   }
   .paw-loader {
     animation: bounce 1s infinite alternate;
@@ -380,6 +350,7 @@
     }
   }
 
+  /* PIX BOX */
   .qr-section {
     display: flex;
     flex-direction: column;
@@ -404,8 +375,8 @@
     text-transform: uppercase;
   }
   .qr-code {
-    width: 220px;
-    height: 220px;
+    width: 200px;
+    height: 200px;
     border: 1px solid #eee;
     border-radius: 20px;
     margin-bottom: 25px;
@@ -416,6 +387,8 @@
     display: flex;
     gap: 10px;
     margin-top: 10px;
+    width: 100%;
+    max-width: 400px;
   }
   .code-container input {
     flex: 1;
@@ -442,6 +415,7 @@
   .copy-btn.success {
     background: #22c55e;
   }
+
   .instructions {
     text-align: left;
     margin-top: 30px;
@@ -449,7 +423,7 @@
     padding: 20px;
     border-radius: 20px;
     width: 100%;
-    box-sizing: border-box;
+    border: 1px solid #ffecb3;
   }
   .instructions h4 {
     font-size: 0.95rem;
@@ -476,6 +450,145 @@
   .highlight {
     color: #f77f00;
     font-weight: 800;
+  }
+
+  /* PAID STATE */
+  .success-container {
+    animation: slideUp 0.6s ease-out;
+  }
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .success-card {
+    background: white;
+    border-radius: 35px;
+    border: 2px solid #dcfce7;
+    padding: 40px 30px;
+    text-align: center;
+    box-shadow: 0 10px 40px rgba(34, 197, 94, 0.05);
+  }
+  .icon-header {
+    margin-bottom: 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .check-wrapper {
+    padding: 15px;
+    background: #f0fdf4;
+    border-radius: 50%;
+  }
+  .success-card h2 {
+    color: #166534;
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 10px;
+  }
+  .main-msg {
+    color: #4a342e;
+    font-weight: 500;
+    margin-bottom: 35px;
+  }
+
+  .delivery-steps {
+    display: grid;
+    gap: 15px;
+    text-align: left;
+    margin-bottom: 35px;
+  }
+  .delivery-item {
+    display: flex;
+    gap: 15px;
+    align-items: flex-start;
+    padding: 20px;
+    background: #fffcf0;
+    border-radius: 22px;
+    border: 1px solid #ffecb3;
+  }
+  .step-text strong {
+    display: block;
+    color: #4a342e;
+    font-size: 1rem;
+    margin-bottom: 4px;
+  }
+  .step-text span {
+    font-size: 0.85rem;
+    color: #6d4c41;
+    line-height: 1.5;
+    font-weight: 500;
+  }
+
+  .guarantee-box {
+    background: #fff1f2;
+    border: 1.5px solid #ffe4e6;
+    padding: 22px;
+    border-radius: 22px;
+    text-align: left;
+    margin-bottom: 20px;
+  }
+  .guarantee-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #e11d48;
+    font-weight: 800;
+    margin-bottom: 10px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+  }
+  .guarantee-box p {
+    font-size: 0.85rem;
+    color: #9f1239;
+    margin: 0;
+    line-height: 1.6;
+    font-weight: 600;
+  }
+  .mt-small {
+    margin-top: 10px !important;
+  }
+
+  .support-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #bfa59d;
+    font-size: 0.8rem;
+    justify-content: center;
+    font-weight: 600;
+  }
+
+  /* SUMMARY */
+  .order-summary {
+    position: sticky;
+    top: 20px;
+    padding: 30px;
+    background: white;
+    border-radius: 30px;
+    border: 1px solid #ffecb3;
+  }
+  .secure-checkout {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 0.8rem;
+    color: #166534;
+    margin-bottom: 20px;
+    background: #f0fdf4;
+    padding: 10px;
+    border-radius: 14px;
+    font-weight: 700;
+  }
+  .total-price {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #f77f00;
   }
 
   .status-waiting {
@@ -507,129 +620,28 @@
     }
   }
 
-  .success-card {
-    padding: 40px;
-    text-align: center;
-    border: 2px solid #e6fffa;
-    background: #ffffff;
-    border-radius: 30px;
-  }
-  .icon-header {
-    margin-bottom: 20px;
-  }
-  .success-card h2 {
-    color: #1a202c;
-    font-size: 2rem;
-    margin-bottom: 10px;
-  }
-  .main-msg {
-    color: #4a5568;
-    margin-bottom: 30px;
-  }
-  .delivery-steps {
-    display: grid;
-    gap: 20px;
-    text-align: left;
-    margin-bottom: 40px;
-  }
-  .delivery-item {
-    display: flex;
-    gap: 15px;
-    align-items: flex-start;
-    padding: 15px;
-    background: #f8fafc;
-    border-radius: 15px;
-  }
-  .step-text strong {
-    display: block;
-    color: #4a342e;
-    font-size: 1rem;
-  }
-  .step-text span {
-    font-size: 0.85rem;
-    color: #8d6e63;
-    line-height: 1.4;
-  }
-  .guarantee-box {
-    background: #fef2f2;
-    border: 1px solid #fee2e2;
-    padding: 20px;
-    border-radius: 15px;
-    text-align: left;
-  }
-  .guarantee-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: #dc2626;
-    font-weight: 700;
-    margin-bottom: 8px;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-  }
-  .guarantee-box p {
-    font-size: 0.85rem;
-    color: #991b1b;
-    margin: 0;
-    line-height: 1.5;
-  }
-  .support-info {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 25px;
-    color: #a0aec0;
-    font-size: 0.75rem;
-    justify-content: center;
-  }
-  .order-summary {
-    position: sticky;
-    top: 20px;
-    padding: 30px;
-    background: white;
-    border-radius: 20px;
-  }
-  .secure-checkout {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    font-size: 0.8rem;
-    color: #166534;
-    margin-bottom: 20px;
-    background: #f0fff4;
-    padding: 6px;
-    border-radius: 6px;
-    font-weight: 600;
-  }
-  .summary-total {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-weight: 700;
-    margin-top: 20px;
-  }
-  .total-price {
-    font-size: 2rem;
-    font-weight: 800;
-    color: #f77f00;
-  }
-
-  @media (max-width: 768px) {
+  @media (max-width: 850px) {
     .content-wrapper {
       grid-template-columns: 1fr;
     }
     .summary-side {
-      order: -1;
+      order: 2;
+      margin-top: 20px;
     }
     .code-container {
       flex-direction: column;
     }
     .copy-btn {
-      padding: 15px;
+      padding: 16px;
     }
     .success-card {
-      padding: 20px;
+      padding: 30px 20px;
+    }
+    .delivery-item {
+      padding: 15px;
+    }
+    .section-header h2 {
+      font-size: 1.6rem;
     }
   }
 </style>

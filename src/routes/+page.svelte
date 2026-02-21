@@ -138,7 +138,9 @@
       <div class="container">
         <StepIndicator {currentStep} />
 
-        {#if currentStep === 0}
+          <StepPayment onComplete={completeCheckout} />
+
+        <!-- {#if currentStep === 0}
           <StepOrder onNext={nextStep} />
         {:else if currentStep === 1}
           <StepExtras onNext={nextStep} />
@@ -146,7 +148,7 @@
           <StepCustomer onNext={nextStep} />
         {:else if currentStep === 3}
           <StepPayment onComplete={completeCheckout} />
-        {/if}
+        {/if} -->
       </div>
     </div>
   </div>
