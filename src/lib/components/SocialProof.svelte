@@ -1,33 +1,38 @@
 <script lang="ts">
   import {
     Star,
-    Heart,
+    PawPrint,
     CheckCircle2,
     ChevronLeft,
     ChevronRight,
     MessageSquare,
+    Bone,
   } from "lucide-svelte";
 
   const reviews = [
     {
-      img: "https://files.botsync.site/casais/img_04.jpeg",
-      couple: "Luan & Grazi",
-      tag: "Eternizado",
+      img: "https://files.botsync.site/certificado-pet/print_01.jpeg",
+      pet: "Billy",
+      tutor: "João Silva",
+      tag: "Cachorro",
     },
     {
-      img: "https://files.botsync.site/casais/img_01.jpg",
-      couple: "Fernanda & Samuel",
-      tag: "Presente Surpresa",
+      img: "https://files.botsync.site/certificado-pet/print_02.jpeg",
+      pet: "Mel",
+      tutor: "Ana Oliveira",
+      tag: "Cachorro",
     },
     {
-      img: "https://files.botsync.site/casais/img_03.jpeg",
-      couple: "Gustavo & Ana",
-      tag: "Presente Surpresa",
+      img: "https://files.botsync.site/certificado-pet/print_03.jpeg",
+      pet: "Thor",
+      tutor: "Felipe Souza",
+      tag: "Gato",
     },
     {
-      img: "https://files.botsync.site/casais/img_05.jpeg",
-      couple: "Tati & Lucas",
-      tag: "Pedido de Namoro",
+      img: "https://files.botsync.site/certificado-pet/print_04.jpeg",
+      pet: "Luna",
+      tutor: "Carla Santos",
+      tag: "Coelho",
     },
   ];
 
@@ -42,16 +47,23 @@
   }
 </script>
 
+<svelte:head>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&display=swap"
+    rel="stylesheet"
+  />
+</svelte:head>
+
 <section class="social-proof">
   <div class="container">
     <div class="text-center mb-8">
       <div class="badge-mini">
-        <Heart size={14} fill="currentColor" />
-        <span>Social Proof</span>
+        <PawPrint size={14} fill="currentColor" />
+        <span>Tutores Felizes</span>
       </div>
-      <h2 class="section-title">Quem já viveu esse amor</h2>
+      <h2 class="section-title">Quem já registrou seu pet</h2>
       <p class="subtitle">
-        Veja como ficaram os certificados de alguns de nossos casais apaixonados
+        Veja como ficaram as certidões de alguns dos nossos melhores amigos
       </p>
     </div>
 
@@ -64,23 +76,20 @@
         {#each reviews as review}
           <div class="proof-card">
             <div class="image-container">
-              <img src={review.img} alt="Certificado do casal" />
+              <img src={review.img} alt="Certificado do pet" />
               <div class="overlay">
-                <!-- <span class="tag">{review.tag}</span> -->
+                <span class="tag"><Bone size={12} /> {review.tag}</span>
               </div>
             </div>
             <div class="info">
               <div class="stars">
-                <Star size={14} fill="#ffb5a7" color="#ffb5a7" />
-                <Star size={14} fill="#ffb5a7" color="#ffb5a7" />
-                <Star size={14} fill="#ffb5a7" color="#ffb5a7" />
-                <Star size={14} fill="#ffb5a7" color="#ffb5a7" />
-                <Star size={14} fill="#ffb5a7" color="#ffb5a7" />
+                {#each Array(5) as _}
+                  <Star size={14} fill="#ffcc80" color="#ffcc80" />
+                {/each}
               </div>
-              <h3>{review.couple}</h3>
               <div class="verified">
                 <CheckCircle2 size={14} />
-                <span>Certificado Enviado</span>
+                <span>Registro Oficial Enviado</span>
               </div>
             </div>
           </div>
@@ -94,13 +103,13 @@
 
     <div class="footer-stats">
       <div class="stat">
-        <MessageSquare size={20} />
-        <span>Envio direto no WhatsApp</span>
+        <MessageSquare size={20} color="#f77f00" />
+        <span>Suporte via WhatsApp</span>
       </div>
       <div class="divider-dot"></div>
       <div class="stat">
-        <CheckCircle2 size={20} />
-        <span>Satisfação Garantida</span>
+        <CheckCircle2 size={20} color="#f77f00" />
+        <span>Entrega Garantida</span>
       </div>
     </div>
   </div>
@@ -109,37 +118,41 @@
 <style>
   .social-proof {
     padding: 80px 0;
-    background: #fffafa;
+    background: #ffffff;
     overflow: hidden;
+    font-family: "Quicksand", sans-serif;
   }
 
   .badge-mini {
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    background: #ffe3e3;
-    color: #e63946;
-    padding: 6px 16px;
+    background: #fff0d6;
+    color: #f77f00;
+    padding: 8px 18px;
     border-radius: 50px;
     font-size: 0.8rem;
     font-weight: 700;
     text-transform: uppercase;
     margin-bottom: 15px;
+    border: 1px solid #ffcc80;
   }
 
   .section-title {
-    font-family: "Great Vibes", cursive;
-    color: #5e0b15;
-    font-size: 3.5rem;
+    color: #ff9f1c;
+    font-size: clamp(2.2rem, 8vw, 3.5rem);
     margin-bottom: 10px;
     line-height: 1;
+    font-weight: 800;
+    letter-spacing: -1px;
   }
 
   .subtitle {
-    color: #8d5b5b;
+    color: #8d6e63;
     font-size: 1.1rem;
     max-width: 600px;
     margin: 0 auto;
+    font-weight: 500;
   }
 
   .carousel-wrapper {
@@ -165,27 +178,29 @@
     flex: 0 0 280px;
     scroll-snap-align: start;
     background: white;
-    border-radius: 24px;
+    border-radius: 28px;
     overflow: hidden;
-    box-shadow: 0 10px 25px rgba(74, 14, 14, 0.05);
-    border: 1px solid #feeafa;
+    box-shadow: 0 10px 30px rgba(74, 52, 46, 0.05);
+    border: 1px solid #ffecb3;
     transition: transform 0.3s ease;
   }
 
   .proof-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-8px);
   }
 
   .image-container {
     position: relative;
-    aspect-ratio: 9/14;
+    aspect-ratio: 9/12;
     overflow: hidden;
+    background: #fdfdfd;
   }
 
   .image-container img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain;
+    padding: 10px;
   }
 
   .overlay {
@@ -194,17 +209,21 @@
     left: 0;
     right: 0;
     padding: 20px;
-    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+    background: linear-gradient(to top, rgba(255, 159, 28, 0.2), transparent);
   }
 
   .tag {
-    background: rgba(255, 255, 255, 0.2);
-    backdrop-filter: blur(5px);
-    color: white;
-    padding: 4px 12px;
+    background: rgba(255, 255, 255, 0.9);
+    color: #f77f00;
+    padding: 5px 12px;
     border-radius: 50px;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
   }
 
   .info {
@@ -219,18 +238,19 @@
   }
 
   .info h3 {
-    font-size: 1.1rem;
-    color: #4a0e0e;
+    font-size: 1.15rem;
+    color: #4a342e;
     margin-bottom: 5px;
+    font-weight: 700;
   }
 
   .verified {
     display: flex;
     align-items: center;
     gap: 5px;
-    color: #2f855a;
+    color: #22c55e;
     font-size: 0.8rem;
-    font-weight: 600;
+    font-weight: 700;
   }
 
   .nav-btn {
@@ -248,12 +268,12 @@
     justify-content: center;
     cursor: pointer;
     z-index: 10;
-    color: #c9184a;
+    color: #ff9f1c;
     transition: all 0.3s;
   }
 
   .nav-btn:hover {
-    background: #c9184a;
+    background: #ff9f1c;
     color: white;
   }
 
@@ -276,15 +296,15 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #8d5b5b;
-    font-weight: 600;
+    color: #8d6e63;
+    font-weight: 700;
     font-size: 0.9rem;
   }
 
   .divider-dot {
-    width: 5px;
-    height: 5px;
-    background: #ffccd5;
+    width: 6px;
+    height: 6px;
+    background: #ffcc80;
     border-radius: 50%;
   }
 
@@ -296,10 +316,10 @@
       display: none;
     }
     .section-title {
-      font-size: 2.5rem;
+      font-size: 2.2rem;
     }
     .proof-card {
-      flex: 0 0 250px;
+      flex: 0 0 260px;
     }
     .footer-stats {
       flex-direction: column;

@@ -50,7 +50,7 @@
 
   .benefits {
     padding: 100px 0;
-    background: #fffcf0;
+    background: #fafafa;
     position: relative;
     font-family: "Quicksand", sans-serif;
   }

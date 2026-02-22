@@ -54,7 +54,7 @@
   />
   <link rel="icon" href={icon} />
 
-  <!-- <script>
+  <script>
     !(function (f, b, e, v, n, t, s) {
       if (f.fbq) return;
       n = f.fbq = function () {
@@ -78,7 +78,7 @@
       "script",
       "https://connect.facebook.net/en_US/fbevents.js",
     );
-    fbq("init", "875484495259675");
+    fbq("init", "1561177358295629");
     fbq("track", "PageView");
   </script>
 
@@ -87,13 +87,13 @@
       height="1"
       width="1"
       style="display:none"
-      src="https://www.facebook.com/tr?id=875484495259675&ev=PageView&noscript=1"
+      src="https://www.facebook.com/tr?id=1561177358295629&ev=PageView&noscript=1"
     />
   </noscript>
 
   <script
     async
-    src="https://www.googletagmanager.com/gtag/js?id=G-SHQ596VRV3"
+    src="https://www.googletagmanager.com/gtag/js?id=G-6RKMRENKMJ"
   ></script>
 
   <script
@@ -112,13 +112,13 @@
     }
     gtag("js", new Date());
 
-    gtag("config", "G-SHQ596VRV3");
-  </script> -->
+    gtag("config", "G-6RKMRENKMJ");
+  </script>
 </svelte:head>
 
 {#if !showCheckout}
   <Hero onStartCheckout={startCheckout} />
-  <!-- <SocialProof /> -->
+  <SocialProof />
   <!-- <Templates /> -->
   <Benefits />
   <HowItWorks onStartCheckout={startCheckout} />
