@@ -10,6 +10,8 @@
         AlertTriangle,
         Image as ImageIcon,
         Printer,
+        MoreVertical,
+        Compass,
     } from "lucide-svelte";
     import { onMount } from "svelte";
     import { fade, fly } from "svelte/transition";
@@ -40,7 +42,7 @@
                     name: data.name,
                     type: data.type,
                     size: data.size,
-                    createdAt: data.createdAt,
+                    createAt: new Date(data.createAt as string),
                     downloadUrl: data.downloadUrl,
                     previewUrl:
                         "https://files.botsync.site/certificado-pet/Billy.png",
@@ -51,11 +53,31 @@
         }
     };
 
+    const downloadFile = async () => {
+        try {
+            const response = await fetch(product.downloadUrl);
+            const blob = await response.blob();
+            const url = URL.createObjectURL(blob);
+
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = product.name + "." + product.type;
+            document.body.appendChild(link);
+            link.click();
+            link.remove();
+
+            URL.revokeObjectURL(url);
+        } catch (err) {
+            console.error("Erro ao baixar arquivo:", err);
+            alert("Não foi possível baixar o arquivo. Tente novamente.");
+        }
+    };
+
     const daysRemaining = 6;
 </script>
 
 <svelte:head>
-    <title>Download do Registro - {"Certidão de PET"}</title>
+    <title>Download do Registro - Certidão de PET</title>
     <link
         href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&display=swap"
         rel="stylesheet"
@@ -65,6 +87,31 @@
 {#if product}
     <main class="download-page">
         <div class="container">
+            <!-- TUTORIAL DE NAVEGADOR -->
+            <div class="browser-notice" in:fly={{ y: -20, duration: 600 }}>
+                <div class="notice-header">
+                    <Compass size={24} />
+                    <h3>Atenção: Para baixar com sucesso</h3>
+                </div>
+                <div class="notice-steps">
+                    <div class="step">
+                        <span class="number">1</span>
+                        <p>
+                            Toque nos <strong>três pontinhos</strong>
+                            <MoreVertical size={16} class="inline-icon" /> no canto
+                            superior.
+                        </p>
+                    </div>
+                    <div class="step">
+                        <span class="number">2</span>
+                        <p>
+                            Selecione <strong>"Abrir no Navegador"</strong> (Chrome
+                            ou Safari).
+                        </p>
+                    </div>
+                </div>
+            </div>
+
             <header class="page-header">
                 <div class="logo">
                     <PawPrint size={32} color="#ff9f1c" />
@@ -111,7 +158,7 @@
                             <h1>{product.name}</h1>
                             <div class="meta-info">
                                 <span
-                                    ><Calendar size={14} /> Gerado em {product.createdAt.toLocaleDateString(
+                                    ><Calendar size={14} /> Gerado em {product.createAt.toLocaleDateString(
                                         "pt-BR",
                                     )}</span
                                 >
@@ -126,10 +173,10 @@
                         <a
                             href={product.downloadUrl}
                             class="btn-download"
-                            download
+                            on:click|preventDefault={downloadFile}
                         >
                             <Download size={22} />
-                            Baixar Certidão Agora
+                            Baixar Meu Certificado
                         </a>
                         <p class="file-size">
                             Tamanho do arquivo: {product.size}
@@ -156,7 +203,7 @@
                                 <h4>Compartilhe</h4>
                                 <p>
                                     Poste uma foto do seu pet com a certidão e
-                                    marque a gente nas redes sociais!
+                                    marque a gente!
                                 </p>
                             </div>
                         </div>
@@ -166,18 +213,14 @@
                 <div class="help-box">
                     <AlertTriangle size={20} color="#ff9f1c" />
                     <p>
-                        Problemas com o download? O suporte está disponível via
-                        WhatsApp. Lembre-se: por segurança, arquivos são
-                        excluídos permanentemente após 7 dias.
+                        Arquivos são excluídos permanentemente após 7 dias por
+                        segurança. Salve-o agora no seu dispositivo.
                     </p>
                 </div>
             </div>
 
             <footer class="page-footer">
-                <p>
-                    &copy; {new Date().getFullYear()} Registro Pet Oficial. Todos
-                    os direitos reservados.
-                </p>
+                <p>&copy; {new Date().getFullYear()} Registro Pet Oficial.</p>
             </footer>
         </div>
     </main>
@@ -198,7 +241,7 @@
         background: var(--bg);
         font-family: "Quicksand", sans-serif;
         color: var(--text);
-        padding: 20px 0;
+        padding: 10px 0 40px;
     }
 
     .container {
@@ -207,11 +250,78 @@
         padding: 0 20px;
     }
 
+    .browser-notice {
+        background: #ffcc80;
+        border-radius: 20px;
+        padding: 20px;
+        margin-bottom: 30px;
+        border: 2px solid #f77f00;
+        box-shadow: 0 10px 20px rgba(247, 127, 0, 0.1);
+    }
+
+    .notice-header {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 15px;
+        color: #4a342e;
+    }
+
+    .notice-header h3 {
+        margin: 0;
+        font-size: 1.1rem;
+        font-weight: 800;
+    }
+
+    .notice-steps {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 15px;
+    }
+
+    .step {
+        background: rgba(255, 255, 255, 0.4);
+        padding: 12px;
+        border-radius: 12px;
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .step .number {
+        background: #f77f00;
+        color: white;
+        width: 24px;
+        height: 24px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: 800;
+        font-size: 0.8rem;
+        flex-shrink: 0;
+    }
+
+    .step p {
+        margin: 0;
+        font-size: 0.85rem;
+        font-weight: 600;
+        line-height: 1.3;
+    }
+
+    .inline-icon {
+        display: inline;
+        vertical-align: middle;
+        background: #f77f00;
+        color: white;
+        border-radius: 4px;
+        padding: 1px;
+    }
+
     .page-header {
         display: flex;
         justify-content: center;
-        margin-bottom: 40px;
-        padding: 20px 0;
+        margin-bottom: 30px;
     }
 
     .logo {
@@ -229,7 +339,6 @@
         box-shadow: 0 20px 60px rgba(74, 52, 46, 0.06);
         border: 1px solid #ffecb3;
         overflow: hidden;
-        position: relative;
     }
 
     .expiration-banner {
@@ -263,14 +372,6 @@
         justify-content: center;
         border: 2px solid #f0f0f0;
         position: relative;
-        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
-    }
-
-    .file-icon {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        color: #ddd;
     }
 
     .file-icon.pdf {
@@ -300,10 +401,6 @@
         width: 100%;
         height: 100%;
         object-fit: contain;
-    }
-
-    .product-details {
-        flex: 1;
     }
 
     .category-tag {
@@ -432,15 +529,16 @@
     }
 
     .page-footer {
-        margin-top: 60px;
+        margin-top: 40px;
         text-align: center;
-        padding-bottom: 40px;
         color: var(--text-light);
         font-size: 0.85rem;
-        font-weight: 500;
     }
 
     @media (max-width: 768px) {
+        .notice-steps {
+            grid-template-columns: 1fr;
+        }
         .product-main {
             flex-direction: column;
             text-align: center;
