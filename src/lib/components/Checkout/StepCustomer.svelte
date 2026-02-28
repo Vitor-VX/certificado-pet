@@ -123,6 +123,14 @@
       return;
     }
 
+    people.forEach((p, index) => {
+      const fullLocation = `${sanitizeString(p.cityName)} - ${p.stateName.toUpperCase().trim()}`;
+      updatePersonData(index, {
+        ...p,
+        cityName: fullLocation,
+      });
+    });
+
     track("initiate_checkout", { value: totalAmount });
     updateCustomerData({
       ...customerData,
